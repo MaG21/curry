@@ -1,0 +1,8 @@
+syntax: regexp
+
+\.lock$
+\.log$
+\.back$
+~$
+\.(swp|swo)$
+
