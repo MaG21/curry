@@ -119,7 +119,7 @@ class Scrapper::CentralBank
 
 		[:gocr, :ocrad].each do|engine|
 			data   = get_data(@url, engine)
-			values = data.scan(/(?<=RD.)[lIOS\d. ]+/)
+			values = data.scan(/(?<=D.)..\.../)
 
 			tmp_buying_rate, tmp_selling_rate = values.collect {|rate| rate.tr('lIOS', '1105').tr ' ', ''}
 
@@ -195,8 +195,6 @@ class Scrapper::BPD
 			return
 		end
 
-		byebug
-	
 		nodes = @agent.page.search(XPATH_STRING)
 
 		text = nodes.map(&:text).join
@@ -378,6 +376,6 @@ class Scrapper::Reservas
 		end
 	end
 
-	DATA_URI = URI('http://www.banreservas.com.do/Pages/Home.aspx')
+	DATA_URI = URI('http://www.banreservas.com/Pages/index.aspx')
 end
 
