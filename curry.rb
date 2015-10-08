@@ -4,7 +4,7 @@
 require 'bundler/setup'
 Bundler.require(:default)
 Bundler.require(:production)
-Bundler.require(:curry)        # This line is important, in case curry is embeded in other project
+Bundler.require(:curry)        # This line is important, in case curry is embedded in other project
                                # with it's own Gemfile (like Rails)
 
 require 'thread'
