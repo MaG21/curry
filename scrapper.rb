@@ -2,6 +2,12 @@ require 'uri'
 require 'json'
 require 'thwait'
 require 'bigdecimal'
+require 'mkmf'
+
+# Don't create mkmf.log files
+module MakeMakefile::Logging
+	  @logfile = File::NULL
+end
 
 module Scrapper
 	USER_AGENTS = ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2',
@@ -97,6 +103,10 @@ class Scrapper::CentralBank
 		@url    = url
 		@dollar = {}
 
+		@has_gocr  = !!find_executable('gocr')
+		@has_djpeg = !!find_executable('djpeg')
+		@has_ocrad = !!find_executable('ocrad')
+
 		parse_data()
 	end
 
@@ -139,12 +149,13 @@ class Scrapper::CentralBank
 	end
 
 	def get_data(url, engine=:ocrad)
+		return '' unless @has_djpeg
+
 		r_fd, w_fd = IO.pipe
 
-		case engine
-		when :ocrad
+		if engine == :ocrad and @has_ocrad
 			spawn "curl -s #{@url}| djpeg -grayscale -pnm | ocrad -F utf8", :out => w_fd
-		when :gocr
+		elsif engine == :gocr and @has_gocr
 			spawn "curl -s #{@url}| djpeg -grayscale -pnm | gocr -f UTF8 -", :out => w_fd
 		else
 			return ''
