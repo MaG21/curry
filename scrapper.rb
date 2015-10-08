@@ -189,40 +189,28 @@ class Scrapper::BPD
 
 	def parse_page
 		begin
-			@agent.get @url
+			result = @agent.get @url
 		rescue SocketError
 			$stderr.puts $!
 			return
 		end
 
-		nodes = @agent.page.search(XPATH_STRING)
+		xml = Nokogiri.XML(result.body)
 
-		text = nodes.map(&:text).join
+		@dollar[:buying_rate]  = "%.02f" % xml.search(XPATH_DOLLAR_BUYING_RATE).first.text.to_f
+		@dollar[:selling_rate] = "%.02f" % xml.search(XPATH_DOLLAR_SELLING_RATE).first.text.to_f
 
-		# The order in wich euros and dollars are placed it's unknown, by general,
-		# the dollar's rate comes first, however, that can't be taken for granted.
-		# Otherwise the resulting regular expressions would be much simpler.
-		# Actually these regular expressions can be used against the entire site and still
-		# they will yield the desired result.
-		text[/d.ll?ar\s+(:?[\d.]+\s[CV]\s*){2}/i].to_s.scan(/([\d.]+)\s([CV])/i) do|value, type|
-			if type.upcase == 'C'
-				@dollar[:buying_rate] = value
-			else
-				@dollar[:selling_rate]= value
-			end
-		end
-
-		text[/euro\s+(:?[\d.]+\s[CV]\s*){2}/i].to_s.scan(/([\d.]+)\s([CV])/i) do|value, type|
-			if type.upcase == 'C'
-				@euro[:buying_rate] = value
-			else
-				@euro[:selling_rate]= value
-			end
-		end
+		@euro[:buying_rate]    = "%.02f" % xml.search(XPATH_EURO_BUYING_RATE).first.text.to_f
+		@euro[:selling_rate]   = "%.02f" % xml.search(XPATH_EURO_SELLING_RATE).first.text.to_f
 	end
 
-	DATA_URI     = URI('https://www.popularenlinea.com/personas/Paginas/Home.aspx')
-	XPATH_STRING = '//div[@class="divisa"]'
+	DATA_URI     = URI("https://www.popularenlinea.com/_api/web/lists/getbytitle('Rates')/items")
+
+	XPATH_DOLLAR_BUYING_RATE  = '//d:DollarBuyRate'
+	XPATH_DOLLAR_SELLING_RATE = '//d:DollarSellRate'
+
+	XPATH_EURO_BUYING_RATE    = '//d:EuroBuyRate'
+	XPATH_EURO_SELLING_RATE   = '//d:EuroSellRate'
 end
 
 class Scrapper::Progress
