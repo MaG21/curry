@@ -4,6 +4,7 @@ require 'json'
 require 'thwait'
 require 'bigdecimal'
 require 'mkmf'
+require 'mechanize'
 
 # Don't create mkmf.log files
 module MakeMakefile::Logging
@@ -108,11 +109,9 @@ class Scrapper::CentralBank
 		@has_djpeg = !!find_executable('djpeg')
 		@has_ocrad = !!find_executable('ocrad')
 
-		unless @has_gocr and @has_ocrad and @has_djpeg
-			warn 'gocr/ocrad/djpeg not installed.'
+		if can_parse?
+			parse_data()
 		end
-
-		parse_data()
 	end
 
 	def serialize
@@ -126,6 +125,10 @@ class Scrapper::CentralBank
 		@serialized_info = JSON.pretty_generate(tmp_info)
 	end
 
+	def can_parse?
+		@has_gocr and @has_ocrad and @has_djpeg
+	end
+
 	private
 
 	# parallelism may speed things up a little :)
@@ -136,11 +139,8 @@ class Scrapper::CentralBank
 		# spawn new process
 		pid        = fork()
 
-		p pid
-
 		engine = pid ? :gocr : :ocrad
 
-		p engine
 		data   = get_data(pdf_file.path, engine)
 
 		values = parse_values(data)
@@ -194,8 +194,6 @@ class Scrapper::CentralBank
 	end
 
 	def get_data(path, engine=:ocrad)
-		return '' unless @has_djpeg
-
 		r_fd, w_fd = IO.pipe
 
 		pdftojpeg_str = pdftojpeg_command(image_path: path)
