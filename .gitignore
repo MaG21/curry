@@ -1,3 +1,4 @@
+*.byebug_history
 *.swp
-*.swo
-Gemfile.lock
+*.o
+*.back
