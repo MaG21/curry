@@ -14,7 +14,8 @@ set :port, 8080
 set :bind, '0.0.0.0'
 set :environment, :production
 
-VERSION = '1.5.2'
+# semver
+VERSION = '1.2.0'
 
 $mutex   = Mutex.new
 $info    = Scrapper::Info.new
