@@ -1,4 +1,5 @@
 require 'uri'
+require 'open-uri'
 require 'json'
 require 'thwait'
 require 'bigdecimal'
@@ -99,13 +100,17 @@ end
 # Central Bank of the Dominican Republic
 class Scrapper::CentralBank
 	attr_reader :dollar
-	def initialize(url=DATA_URL)
+	def initialize(url=DATA_URI)
 		@url    = url
-		@dollar = {}
+		@dollar = Hash.new { String.new }
 
 		@has_gocr  = !!find_executable('gocr')
 		@has_djpeg = !!find_executable('djpeg')
 		@has_ocrad = !!find_executable('ocrad')
+
+		unless @has_gocr and @has_ocrad and @has_djpeg
+			warn 'gocr/ocrad/djpeg not installed.'
+		end
 
 		parse_data()
 	end
@@ -123,40 +128,82 @@ class Scrapper::CentralBank
 
 	private
 
+	# parallelism may speed things up a little :)
 	def parse_data
-		buying_rate  = nil
-		selling_rate = nil
+		pdf_file   = open(DATA_URI)
+		r_fd, w_fd = IO.pipe
 
-		[:gocr, :ocrad].each do|engine|
-			data   = get_data(@url, engine)
-			values = data.scan(/(?<=D.)..\.../)
+		# spawn new process
+		pid        = fork()
 
-			tmp_buying_rate, tmp_selling_rate = values.collect {|rate| rate.tr('lIOS', '1105').tr ' ', ''}
+		p pid
 
-			if buying_rate.nil?  and tmp_buying_rate =~ /\d{2}\.\d{2}+/
-				buying_rate = tmp_buying_rate.strip
-			end
+		engine = pid ? :gocr : :ocrad
 
-			if selling_rate.nil? and tmp_selling_rate =~ /\d{2}\.\d{2}+/
-				selling_rate = tmp_selling_rate.strip
-			end
+		p engine
+		data   = get_data(pdf_file.path, engine)
 
-			break unless buying_rate.to_s.empty? or selling_rate.to_s.empty?
+		values = parse_values(data)
+
+		unless pid
+			w_fd.write(values.join(','))
+			exit 0
 		end
 
-		@dollar[:buying_rate]  = buying_rate.to_s[/\d+\.\d{2}/].to_s
-		@dollar[:selling_rate] = selling_rate.to_s[/\d+\.\d{2}/].to_s
+		Process.wait pid
+
+		w_fd.close
+		pdf_file.close
+		pdf_file.unlink
+
+		values_alternative = r_fd.read.split ','
+
+		@dollar[:buying_rate]  = values.fetch(BUYING_RATE_IDX, '')
+		@dollar[:selling_rate] = values.fetch(SELLING_RATE_IDX, '')
+
+		if @dollar[:buying_rate].empty?
+			@dollar[:buying_rate]  = values_alternative.fetch(BUYING_RATE_IDX, '')
+		end
+
+		if @dollar[:selling_rate].empty?
+			@dollar[:selling_rate] = values_alternative.fetch(SELLING_RATE_IDX, '')
+		end
 	end
 
-	def get_data(url, engine=:ocrad)
+	def parse_values(data)
+		values = data.scan(/(?<=D.)..\.../)
+
+		buying_rate  = ''
+		selling_rate = ''
+
+		tmp_buying_rate, tmp_selling_rate = values.collect {|rate| rate.tr('lIOS', '1105').tr ' ', ''}
+
+		if tmp_buying_rate =~ /\d{2}\.\d{2}+/
+			buying_rate = tmp_buying_rate[/\d+\.\d{2}/]
+		end
+
+		if tmp_selling_rate =~ /\d{2}\.\d{2}+/
+			selling_rate = tmp_selling_rate[/\d+\.\d{2}/]
+		end
+
+		ret = []
+		ret[BUYING_RATE_IDX]  = buying_rate
+		ret[SELLING_RATE_IDX] = selling_rate
+
+		ret
+	end
+
+	def get_data(path, engine=:ocrad)
 		return '' unless @has_djpeg
 
 		r_fd, w_fd = IO.pipe
 
+		pdftojpeg_str = pdftojpeg_command(image_path: path)
+
 		if engine == :ocrad and @has_ocrad
-			spawn "curl -s #{@url}| djpeg -grayscale -pnm | ocrad -F utf8", :out => w_fd
+			spawn "#{pdftojpeg_str} | ocrad -F utf8", :out => w_fd
 		elsif engine == :gocr and @has_gocr
-			spawn "curl -s #{@url}| djpeg -grayscale -pnm | gocr -f UTF8 -", :out => w_fd
+			spawn "#{pdftojpeg_str} | gocr -f UTF8 -v 0 -", :out => w_fd
 		else
 			return ''
 		end
@@ -167,8 +214,13 @@ class Scrapper::CentralBank
 		data
 	end
 
-	DATA_URL = 'http://www.bancentral.gov.do/tasas_cambio/tasaus_mc.jpg'
-	DATA_URI = URI(DATA_URL)
+	def pdftojpeg_command(image_path:)
+		   "convert -density 300 -trim -quality 100 #{image_path} jpeg:fd:1 | djpeg -scale 1/2 -grayscale -pnm"
+	end
+
+	DATA_URI         = URI('http://www.bancentral.gov.do/tasas_cambio/tasaus_mc.pdf')
+	BUYING_RATE_IDX  = 0
+	SELLING_RATE_IDX = 1
 end
 
 # Dominican Popular Bank
