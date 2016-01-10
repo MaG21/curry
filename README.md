@@ -36,7 +36,7 @@ OSX:
 
     $ brew install imagemagick ocrad gocr
 
-This application uses port 8080 by default. One my change the port passing it as<br>
+This application uses port 8080 by default, one may change the port passing it as<br>
 the first parameter:
 
     $ ruby curry.rb 1025
