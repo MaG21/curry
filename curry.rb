@@ -39,37 +39,7 @@ end
 get '/' do
 	headers({'Content-Type' => 'text/plain'})
 
-	<<-EOF
-	Available methods:
-
-	GET /rnc/:rnc
-	Returns information about the RNC specified by :rnc. [JSON serialized]
-
-	GET /ncf/:rnc/:ncf
-	Returns true or false, depending if the RNC and the NCF specified by :rnc and
-	:ncf respectively belongs to the entity associated to :rnc.
-
-	GET /rates
-	Returns the exchange rate for euros and dollars from all major banks of the
-	Dominican Republic. [JSON serialized]
-
-	GET /central_bank_rates
-	Returns the exchange rate for the dollar according to the Central Bank of the
-	Dominican Republic. [JSON serialized]
-
-	This is a simple service that provides the current currency exchange rate for
-	the Dominican Republic. To do so, we feed our servers from the web pages of all
-	the major banks of the Dominican Republic, these pages are updated on a daily
-	basis by every bank.
-
-	The method being used by this application to calculate the mean of the data is
-	the Harmonic mean.
-
-	This service is provided by: Marcos Organizador de Negocios S.R.L.
-	Made with high programming standards to provide high availability.
-
-	Something is wrong with this service? Please contact us at support@marcos.do.
-	EOF
+	send_file 'README.md'
 end
 
 get '/rates' do
