@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/MarcosCommunity/curry.svg?branch=master)](https://travis-ci.org/MarcosCommunity/curry)
+
 # Currency Scrapper for the Dominican Republic
 
 This is a simple service that provides the current currency exchange rate for
@@ -80,28 +82,9 @@ Dominican Republic. [JSON serialized]
 	    },
 	    "source": "http://www.blh.com.do/Inicio.aspx"
 	  },
-	  "progress": {
-	    "euro": {
-	      "buying_rate": "49.40",
-	      "selling_rate": "50.90"
-	    },
-	    "dollar": {
-	      "buying_rate": "45.26",
-	      "selling_rate": "45.56"
-	    },
-	    "source": "http://www.progreso.com.do/index.php"
-	  },
-	  "bareservas": {
-	    "euro": {
-	      "buying_rate": "47.00",
-	      "selling_rate": "53.00"
-	    },
-	    "dollar": {
-	      "buying_rate": "45.15",
-	      "selling_rate": "45.56"
-	    },
-	    "source": "http://www.banreservas.com/Pages/index.aspx"
-	  },
+
+	  ...
+
 	  "euro_mean": {
 	    "buying_rate": "48.12",
 	    "selling_rate": "51.68"
