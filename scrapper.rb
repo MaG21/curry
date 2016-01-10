@@ -196,7 +196,7 @@ class Scrapper::CentralBank
 	def get_data(path, engine=:ocrad)
 		r_fd, w_fd = IO.pipe
 
-		pdftojpeg_str = pdftojpeg_command(image_path: path)
+		pdftojpeg_str = pdftojpeg_command(path)
 
 		if engine == :ocrad and @has_ocrad
 			spawn "#{pdftojpeg_str} | ocrad -F utf8", :out => w_fd
@@ -212,7 +212,7 @@ class Scrapper::CentralBank
 		data
 	end
 
-	def pdftojpeg_command(image_path:)
+	def pdftojpeg_command(image_path)
 		   "convert -density 300 -trim -quality 100 #{image_path} jpeg:fd:1 | djpeg -scale 1/2 -grayscale -pnm"
 	end
 
