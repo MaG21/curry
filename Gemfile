@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
-group :development do
+group :test, :development do
 	gem 'rspec',  '~> 3.4'
+	gem 'rack-test', '~> 0.6.3'
 	gem 'byebug', '~> 8.2'
 end
 

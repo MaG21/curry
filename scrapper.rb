@@ -65,7 +65,7 @@ class Scrapper::Info
 				     :dollar => @progress.dollar,
 				     :source => @progress.url},
 
-		    :bareservas  => {:euro   => @reservas.euro,
+		    :banreservas => {:euro   => @reservas.euro,
 				     :dollar => @reservas.dollar,
 				     :source => @reservas.url},
 
