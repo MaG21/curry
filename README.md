@@ -2,38 +2,55 @@
 
 # Currency Scrapper for the Dominican Republic
 
-This is a simple service that provides the current currency exchange rate for
-the Dominican Republic. To do so, we parse the web pages of all the major banks
-of the Dominican Republic, those pages are updated on a daily basis by every
+This is a simple service that provides the current currency exchange rate for<br>
+the Dominican Republic. To do so, we parse the web pages of all the major banks<br>
+of the Dominican Republic, those pages are updated on a daily basis by every<br>
 bank.
 
-The method used by this application to calculate the mean of the data is the
+The method used by this application to calculate the mean of the data is the<br>
 _Harmonic mean_.
 
-This application is freely available as a service thanks to
-_Marcos Organizador de Negocios S.R.L_ here http://api.marcos.do/
+This application is freely available as a service thanks to<br>
+_Marcos Organizador de Negocios S.R.L_ here http://api.marcos.do<br>
 
-Something is wrong with this service?
-Please contact us (at) manuel at marcos dot do.
+Something is wrong with this service?<br>
+Please contact us (at) manuel at marcos dot do.<br>
 
-or
+or<br>
 
-you may make a pull request as well, if you see something that needs to be fixed
-or better implemented.
+you may make a pull request as well, if you see something that needs to be fixed<br>
+or better implemented.<br>
+
+### Install
+	$ bundle install
+
+Please note that ``imagemagick``, ``ocrad`` and/or ``gocr`` should be installed<br>
+otherwise the dollar rates given by the Central Bank of the Dominican Republic</br>
+would not be available.<br>
+
+ubuntu users:<br>
+	$ sudo apt-get install imagemagick ocrad gocr
+
+OSX user:<br>
+	$ brew install imagemagick ocrad gocr
+
+This application uses port 8080 by default. One my change the port passing it as<br>
+the first parameter:<br>
+	$ ruby curry.rb 1025
 
 ### Available actions
 
-``GET /requests``
+``GET /requests``<br>
 Returns the total number of requests successefully served up to this moment.
 
 sample response:
 
 	1092 requests.
 
-``GET /rnc/:rnc``
-Returns information about the RNC specified by `:rnc`. [JSON serialized]
+``GET /rnc/:rnc``<br>
+Returns information about the RNC specified by `:rnc`. [JSON serialized]<br>
 
-sample response:
+sample response:<br>
 
 	{
 	  "rnc": "131098193",
@@ -44,20 +61,20 @@ sample response:
 	  "status": "ACTIVO"
 	}
 
-``GET /ncf/:rnc/:ncf``
-Returns true or false, depending if the RNC and the NCF specified by :rnc and
-``:ncf`` respectively belongs to the entity associated to ``:rnc``
+``GET /ncf/:rnc/:ncf``<br>
+Returns true or false, depending if the RNC and the NCF specified by :rnc and<br>
+``:ncf`` respectively belongs to the entity associated to ``:rnc``<br>
 
-sample response:
+sample response:<br>
 
 	{
 	  "valid": true
 	}
 
 
-``GET /rates``
-Returns the exchange rate for euros and dollars from all major banks of the
-Dominican Republic. [JSON serialized]
+``GET /rates``<br>
+Returns the exchange rate for euros and dollars from all major banks of the<br>
+Dominican Republic. [JSON serialized]<br>
 
 	{
 	  "bpd": {
@@ -97,11 +114,11 @@ Dominican Republic. [JSON serialized]
 
 
 
-``GET /central_bank_rates``
-Returns the exchange rate for the dollar according to the Central Bank of the
-Dominican Republic. [JSON serialized]
+``GET /central_bank_rates``<br>
+Returns the exchange rate for the dollar according to the Central Bank of the<br>
+Dominican Republic. [JSON serialized]<br>
 
-sample response:
+sample response:<br>
 
 	{
 	  "dollar": {
@@ -111,7 +128,7 @@ sample response:
 	}
 
 ## License
-MIT License
+MIT License<br>
 
 Copyright(C) 2016 Marcos Organizador de Negocios
 
