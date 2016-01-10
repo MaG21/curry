@@ -1,6 +1,10 @@
 #!/usr/bin/env ruby
 # By: MaG
 #
+
+# Get port before sinatra
+port = ARGV.first =~ /\A\d+\z/ ? ARGV.first.to_i : 8080
+
 require 'bundler/setup'
 Bundler.require(:default)
 Bundler.require(:production)
@@ -10,7 +14,7 @@ Bundler.require(:curry)        # This line is important, in case curry is embedd
 require 'thread'
 require_relative 'scrapper'
 
-set :port, 8080
+set :port, port
 set :bind, '0.0.0.0'
 set :environment, :production
 
