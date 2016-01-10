@@ -128,8 +128,7 @@ sample response:
 	}
 
 ## License
-Copyright(C) 2015 Marcos Organizador de Negocios S.R.L
+MIT License
 
-This software is released under the terms of the MIT License. For more
-information refer to file COPYRIGHT included in this distribution.
+Copyright(C) 2016 Marcos Organizador de Negocios
 
