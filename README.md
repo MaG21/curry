@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/MarcosCommunity/curry.svg?branch=master)](https://travis-ci.org/MarcosCommunity/curry)
 
-# Currency Scrapper for the Dominican Republic
+# Currency scraper for the Dominican Republic
 
 This is a simple service that provides the current currency exchange rate for<br>
 the Dominican Republic. To do so, we parse the web pages of all the major banks<br>
