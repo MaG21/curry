@@ -41,6 +41,10 @@ the first parameter:
 
     $ ruby curry.rb 1025
 
+### Known bugs
+There's a bug in older versions of ruby that causes this application to hang for<br>
+an indefinite period of time. Please use Ruby 2.2 +
+
 ### Available actions
 
 ``GET /requests``<br>
