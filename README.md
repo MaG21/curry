@@ -24,7 +24,7 @@ or better implemented.<br>
 ### Install
 	$ bundle install
 
-Please note that ``imagemagick``, ``ocrad`` and/or ``gocr`` should be installed<br>
+Please note that ``imagemagick``, ``ocrad`` and/or ``gocr`` should be installed,<br>
 otherwise the dollar rates given by the Central Bank of the Dominican Republic</br>
 would not be available.<br>
 
