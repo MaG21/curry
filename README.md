@@ -28,15 +28,18 @@ Please note that ``imagemagick``, ``ocrad`` and/or ``gocr`` should be installed<
 otherwise the dollar rates given by the Central Bank of the Dominican Republic</br>
 would not be available.<br>
 
-ubuntu users:<br>
-	$ sudo apt-get install imagemagick ocrad gocr
+Ubuntu:
 
-OSX user:<br>
-	$ brew install imagemagick ocrad gocr
+    $ sudo apt-get install imagemagick ocrad gocr
+
+OSX:
+
+    $ brew install imagemagick ocrad gocr
 
 This application uses port 8080 by default. One my change the port passing it as<br>
-the first parameter:<br>
-	$ ruby curry.rb 1025
+the first parameter:
+
+    $ ruby curry.rb 1025
 
 ### Available actions
 
