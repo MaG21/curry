@@ -93,9 +93,8 @@ class Scrapper::Info
 			sum += BigDecimal.new(1) / BigDecimal.new(rate)
 		end
 
-		(n / sum).to_f.to_s[/\d+\.\d{2}/].to_s   # do not round
+		("%.04f" % (n/sum))[/\d+\.\d{2}/].to_s
 	end
-
 end
 
 # Central Bank of the Dominican Republic
