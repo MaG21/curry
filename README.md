@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/MarcosCommunity/curry.svg?branch=master)](https://travis-ci.org/MarcosCommunity/curry)
 
-# Currency Scrapper for the Dominican Republic
+# Currency scraper for the Dominican Republic
 
 This is a simple service that provides the current currency exchange rate for<br>
 the Dominican Republic. To do so, we parse the web pages of all the major banks<br>
@@ -21,7 +21,7 @@ or<br>
 you may make a pull request as well, if you see something that needs to be fixed<br>
 or better implemented.<br>
 
-### Install
+# Install
 	$ bundle install
 
 Please note that ``imagemagick``, ``ocrad`` and/or ``gocr`` should be installed,<br>
@@ -36,16 +36,16 @@ OSX:
 
     $ brew install imagemagick ocrad gocr
 
-This application uses port 8080 by default. One my change the port passing it as<br>
+This application uses port 8080 by default, one may change the port passing it as<br>
 the first parameter:
 
     $ ruby curry.rb 1025
 
-### Known bugs
-There's a bug in older versions of ruby that causes this application to hang for<br>
+# Known bugs
+There's a bug in older versions of Ruby that causes this application to hang for<br>
 an indefinite period of time. Please use Ruby 2.2 +
 
-### Available actions
+# Available actions
 
 ``GET /requests``<br>
 Returns the total number of requests successefully served up to this moment.

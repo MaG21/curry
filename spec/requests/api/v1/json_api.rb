@@ -34,7 +34,7 @@ describe 'Curry server', type: :request  do
 			expect(json['comercial_name']).to      match(/marcos\s+organizador/i)
 			expect(json['category']).not_to        eq(nil)
 			expect(json['payment_regimen']).not_to eq(nil)
-			expect(json['status']).not_to          match(/active/i)   # if marco should be active, we pay our taxes :)
+			expect(json['status']).to              match(/activo/i)   # Marcos should always be active, we pay all our taxes :)
 		end
 
 		it 'returns a blank JSON response if an invalid RNC is provided' do

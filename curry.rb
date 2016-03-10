@@ -19,7 +19,7 @@ set :bind, '0.0.0.0'
 set :environment, :production
 
 # semver
-VERSION = '1.4.0'
+VERSION = '1.5.1'
 
 $mutex   = Mutex.new
 $info    = Scrapper::Info.new
