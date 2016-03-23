@@ -129,8 +129,8 @@ sample response:<br>
 
 	{
 	  "dollar": {
-	    "buying_rate": "",
-	    "selling_rate": ""
+	    "buying_rate": "45.76",
+	    "selling_rate": "45.81"
 	  }
 	}
 
