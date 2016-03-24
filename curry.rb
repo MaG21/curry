@@ -74,6 +74,11 @@ get '/ncf/:rnc/:ncf' do|rnc, ncf|
 	page = agent.get 'http://www.dgii.gov.do/app/WebApps/Consultas/NCF/ConsultaNCF.aspx'
 	form = page.form id: 'form1'
 
+	keyword.gsub!(/\D/, '')
+	len = keyword.length
+
+	return {valid: false}.to_json unless len == 9 or len == 11
+
 	form.txtRNC = rnc
 	form.txtNCF = ncf
 	form.add_field! 'btnConsultar'
@@ -101,6 +106,11 @@ get '/rnc/:keyword' do|keyword|
 	form.add_field! '__EVENTARGUMENT'
 	form.add_field! '__LASTFOCUS'
 	form.add_field! 'btnBuscaRncCed'
+
+	keyword.gsub!(/\D/, '')
+	len = keyword.length
+
+	return {}.to_json unless len == 9 or len == 11
 
 	form.txtRncCed      = keyword
 	form.btnBuscaRncCed = 'Buscar'
