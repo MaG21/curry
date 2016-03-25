@@ -47,11 +47,13 @@ describe 'Curry server', type: :request  do
 		end
 
 		it 'validates the NCF for an specific RNC' do
-			skip <<-EOF
-				this test is actually quite difficult to maintain,
-				because the NCFs lose their status after a period
-				of time.
-				EOF
+			get '/ncf/123756785/A020010010100000002'
+			expect(last_response.status).to eq(200)
+
+			json = JSON.parse last_response.body
+
+			expect(json).not_to eq({})
+			expect(json['valid']).to eq(false)
 		end
 	end
 

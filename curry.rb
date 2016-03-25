@@ -74,8 +74,8 @@ get '/ncf/:rnc/:ncf' do|rnc, ncf|
 	page = agent.get 'http://www.dgii.gov.do/app/WebApps/Consultas/NCF/ConsultaNCF.aspx'
 	form = page.form id: 'form1'
 
-	keyword.gsub!(/\D/, '')
-	len = keyword.length
+	rnc.gsub!(/\D/, '')
+	len = rnc.length
 
 	return {valid: false}.to_json unless len == 9 or len == 11
 
