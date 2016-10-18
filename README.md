@@ -22,7 +22,10 @@ you may make a pull request as well, if you see something that needs to be fixed
 or better implemented.<br>
 
 # Install
-	$ bundle install
+
+```shell
+$ bundle install
+```
 
 Please note that ``imagemagick``, ``ocrad`` and/or ``gocr`` should be installed,<br>
 otherwise the dollar rates given by the Central Bank of the Dominican Republic</br>
@@ -30,109 +33,126 @@ would not be available.<br>
 
 Ubuntu:
 
-    $ sudo apt-get install imagemagick ocrad gocr
+```shell
+$ sudo apt-get install imagemagick ocrad gocr
+```
 
 OSX:
 
-    $ brew install imagemagick ocrad gocr
+```shell
+$ brew install imagemagick ocrad gocr
+```
 
 This application uses port 8080 by default, one may change the port passing it as<br>
 the first parameter:
 
-    $ ruby curry.rb 1025
+```shell
+$ ruby curry.rb 1025
+```
 
 # Known bugs
+
 There's a bug in older versions of Ruby that causes this application to hang for<br>
 an indefinite period of time. Please use Ruby 2.2 +
 
 # Available actions
 
-``GET /requests``<br>
+## ``GET /requests``
+
 Returns the total number of requests successefully served up to this moment.
 
 sample response:
 
 	1092 requests.
 
-``GET /rnc/:rnc``<br>
+## ``GET /rnc/:rnc``
+
 Returns information about the RNC specified by `:rnc`. [JSON serialized]<br>
 
-sample response:<br>
+sample response:
 
-	{
-	  "rnc": "131098193",
-	  "name": "MARCOS ORGANIZADOR DE NEGOCIOS SRL",
-	  "comercial_name": "MARCOS ORGANIZADOR DE NEGOCIOS",
-	  "category": "",
-	  "payment_regimen": "NORMAL",
-	  "status": "ACTIVO"
-	}
+```json
+{
+  "rnc": "131098193",
+  "name": "MARCOS ORGANIZADOR DE NEGOCIOS SRL",
+  "comercial_name": "MARCOS ORGANIZADOR DE NEGOCIOS",
+  "category": "",
+  "payment_regimen": "NORMAL",
+  "status": "ACTIVO"
+}
+```
 
-``GET /ncf/:rnc/:ncf``<br>
+## ``GET /ncf/:rnc/:ncf``
+
 Returns true or false, depending if the RNC and the NCF specified by :rnc and<br>
 ``:ncf`` respectively belongs to the entity associated to ``:rnc``<br>
 
-sample response:<br>
+sample response:
 
-	{
-	  "valid": true
-	}
+```json
+{
+  "valid": true
+}
+```
 
+## ``GET /rates``
 
-``GET /rates``<br>
 Returns the exchange rate for euros and dollars from all major banks of the<br>
 Dominican Republic. [JSON serialized]<br>
 
-	{
-	  "bpd": {
-	    "euro": {
-	      "buying_rate": "48.15",
-	      "selling_rate": "51.90"
-	    },
-	    "dollar": {
-	      "buying_rate": "45.05",
-	      "selling_rate": "45.56"
-	    },
-	    "source": "https://www.popularenlinea.com/_api/web/lists/getbytitle('Rates')/items"
-	  },
-	  "blh": {
-	    "euro": {
-	      "buying_rate": "48.00",
-	      "selling_rate": "51.00"
-	    },
-	    "dollar": {
-	      "buying_rate": "45.20",
-	      "selling_rate": "45.56"
-	    },
-	    "source": "http://www.blh.com.do/Inicio.aspx"
-	  },
+```json
+{
+  "bpd": {
+    "euro": {
+      "buying_rate": "48.15",
+      "selling_rate": "51.90"
+    },
+    "dollar": {
+      "buying_rate": "45.05",
+      "selling_rate": "45.56"
+    },
+    "source": "https://www.popularenlinea.com/_api/web/lists/getbytitle('Rates')/items"
+  },
+  "blh": {
+    "euro": {
+      "buying_rate": "48.00",
+      "selling_rate": "51.00"
+    },
+    "dollar": {
+      "buying_rate": "45.20",
+      "selling_rate": "45.56"
+    },
+    "source": "http://www.blh.com.do/Inicio.aspx"
+  },
+  
+  ...
+  
+  "euro_mean": {
+    "buying_rate": "48.12",
+    "selling_rate": "51.68"
+  },
+  "dollar_mean": {
+    "buying_rate": "45.16",
+    "selling_rate": "45.56"
+  }
+}
+```
 
-	  ...
+## ``GET /central_bank_rates``
 
-	  "euro_mean": {
-	    "buying_rate": "48.12",
-	    "selling_rate": "51.68"
-	  },
-	  "dollar_mean": {
-	    "buying_rate": "45.16",
-	    "selling_rate": "45.56"
-	  }
-	}
-
-
-
-``GET /central_bank_rates``<br>
 Returns the exchange rate for the dollar according to the Central Bank of the<br>
-Dominican Republic. [JSON serialized]<br>
+Dominican Republic. [JSON serialized]
 
-sample response:<br>
+sample response:
 
-	{
-	  "dollar": {
-	    "buying_rate": "45.76",
-	    "selling_rate": "45.81"
-	  }
-	}
+```json
+{
+  "dollar": {
+    "buying_rate": "45.76",
+    "selling_rate": "45.81"
+  }
+}
+```
 
 ## License
 MIT License<br>
