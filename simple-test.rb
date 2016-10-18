@@ -5,9 +5,9 @@ require 'bundler/setup'
 Bundler.require(:default)
 Bundler.require(:development)
 
-require_relative 'scrapper'
+require_relative 'scraper'
 
-info = Scrapper::Info.new()
+info = Scraper::Info.new()
 puts "Popular Bank rates:"
 p info.bpd.dollar
 p info.bpd.euro

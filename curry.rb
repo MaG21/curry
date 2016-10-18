@@ -12,7 +12,7 @@ Bundler.require(:curry)        # This line is important, in case curry is embedd
                                # with it's own Gemfile (like Rails)
 
 require 'thread'
-require_relative 'scrapper'
+require_relative 'scraper'
 
 set :port, port
 set :bind, '0.0.0.0'
@@ -22,13 +22,13 @@ set :environment, :production
 VERSION = '1.5.3'
 
 $mutex   = Mutex.new
-$info    = Scrapper::Info.new
+$info    = Scraper::Info.new
 $counter = 0
 
 Thread.new do
 	loop do
 		sleep 10_800 # update every three ours
-		info = Scrapper::Info.new
+		info = Scraper::Info.new
 
 		$mutex.synchronize do
 			$info = info

@@ -1,9 +1,9 @@
 require 'byebug'
 
-describe Scrapper, 'module' do
+describe Scraper, 'module' do
 	context 'BPD' do
 		it 'makes an instance of the object' do
-			expect { $bpd = Scrapper::BPD.new }.not_to raise_error
+			expect { $bpd = Scraper::BPD.new }.not_to raise_error
 		end
 
 		it 'parses the BUYING rate of the Dollar' do
@@ -25,7 +25,7 @@ describe Scrapper, 'module' do
 
 	context 'BLH' do
 		it 'makes an instance of the object' do
-			expect { $blh = Scrapper::BLH.new }.not_to raise_error
+			expect { $blh = Scraper::BLH.new }.not_to raise_error
 		end
 
 		it 'parses the BUYING rate of the Dollar' do
@@ -47,7 +47,7 @@ describe Scrapper, 'module' do
 
 	context 'Progress' do
 		it 'makes an instance of the object' do
-			expect { $progress = Scrapper::Progress.new }.not_to raise_error
+			expect { $progress = Scraper::Progress.new }.not_to raise_error
 		end
 
 		it 'parses the BUYING rate of the Dollar' do
@@ -69,7 +69,7 @@ describe Scrapper, 'module' do
 
 	context 'Reservas' do
 		it 'makes an instance of the object' do
-			expect { $reservas = Scrapper::Reservas.new }.not_to raise_error
+			expect { $reservas = Scraper::Reservas.new }.not_to raise_error
 		end
 
 		it 'parses the BUYING rate of the Dollar' do
@@ -91,7 +91,7 @@ describe Scrapper, 'module' do
 
 	context 'Central Bank' do
 		it 'makes an instance of the object' do
-			$central_bank = Scrapper::CentralBank.new
+			$central_bank = Scraper::CentralBank.new
 		end
 
 		it 'parses the BUYING rate of the Dollar' do

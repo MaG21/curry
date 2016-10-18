@@ -11,14 +11,14 @@ module MakeMakefile::Logging
 	  @logfile = File::NULL
 end
 
-module Scrapper
+module Scraper
 	USER_AGENTS = ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2',
 	               'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.2 Safari/537.36',
 		       'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:21.0) Gecko/20130331 Firefox/21.0',
 		       'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko']
 end
 
-class Scrapper::Info
+class Scraper::Info
 	attr_reader :euro_mean,
 		    :dollar_mean
 
@@ -31,11 +31,11 @@ class Scrapper::Info
 	def initialize
 		threads = []
 
-		threads << Thread.new { @bpd          = Scrapper::BPD.new() }
-		threads << Thread.new { @blh          = Scrapper::BLH.new() }
-		threads << Thread.new { @progress     = Scrapper::Progress.new() }
-		threads << Thread.new { @reservas     = Scrapper::Reservas.new() }
-		threads << Thread.new { @central_bank = Scrapper::CentralBank.new }
+		threads << Thread.new { @bpd          = Scraper::BPD.new() }
+		threads << Thread.new { @blh          = Scraper::BLH.new() }
+		threads << Thread.new { @progress     = Scraper::Progress.new() }
+		threads << Thread.new { @reservas     = Scraper::Reservas.new() }
+		threads << Thread.new { @central_bank = Scraper::CentralBank.new }
 
 		ThreadsWait.all_waits(*threads)
 
@@ -98,7 +98,7 @@ class Scrapper::Info
 end
 
 # Central Bank of the Dominican Republic
-class Scrapper::CentralBank
+class Scraper::CentralBank
 	attr_reader :dollar
 	def initialize(url=DATA_URI)
 		@url    = url
@@ -221,7 +221,7 @@ class Scrapper::CentralBank
 end
 
 # Dominican Popular Bank
-class Scrapper::BPD
+class Scraper::BPD
 	attr_reader :url,
 		    :euro,
 		    :dollar
@@ -233,7 +233,7 @@ class Scrapper::BPD
 
 		@agent = Mechanize.new
 
-		@agent.user_agent             = Scrapper::USER_AGENTS.sample
+		@agent.user_agent             = Scraper::USER_AGENTS.sample
 		@agent.ssl_version            = :TLSv1
 		@agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
@@ -273,7 +273,7 @@ class Scrapper::BPD
 	XPATH_EURO_SELLING_RATE   = '//d:EuroSellRate'
 end
 
-class Scrapper::Progress
+class Scraper::Progress
 	attr_reader :url,
 		    :euro,
 		    :dollar
@@ -285,7 +285,7 @@ class Scrapper::Progress
 
 		@agent = Mechanize.new
 
-		@agent.user_agent = Scrapper::USER_AGENTS.sample
+		@agent.user_agent = Scraper::USER_AGENTS.sample
 
 		parse_page()
 	end
@@ -326,7 +326,7 @@ class Scrapper::Progress
 end
 
 # Lopez de Haro Bank
-class Scrapper::BLH
+class Scraper::BLH
 	attr_reader :url,
 		    :euro,
 		    :dollar
@@ -338,7 +338,7 @@ class Scrapper::BLH
 
 		@agent = Mechanize.new
 
-		@agent.user_agent = Scrapper::USER_AGENTS.sample
+		@agent.user_agent = Scraper::USER_AGENTS.sample
 
 		parse_page()
 	end
@@ -379,7 +379,7 @@ class Scrapper::BLH
 end
 
 
-class Scrapper::Reservas
+class Scraper::Reservas
 	attr_reader :url,
 		    :euro,
 		    :dollar
@@ -391,7 +391,7 @@ class Scrapper::Reservas
 
 		@agent = Mechanize.new
 
-		@agent.user_agent = Scrapper::USER_AGENTS.sample
+		@agent.user_agent = Scraper::USER_AGENTS.sample
 
 		parse_page()
 	end
