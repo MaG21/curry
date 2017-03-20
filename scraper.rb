@@ -338,7 +338,9 @@ class Scraper::BLH
 
 		@agent = Mechanize.new
 
-		@agent.user_agent = Scraper::USER_AGENTS.sample
+		@agent.user_agent             = Scraper::USER_AGENTS.sample
+		@agent.ssl_version            = :TLSv1
+		@agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 		parse_page()
 	end
@@ -375,7 +377,7 @@ class Scraper::BLH
 		end
 	end
 
-	DATA_URI = URI('http://www.blh.com.do/Inicio.aspx')
+	DATA_URI = URI('https://www.blh.com.do/Inicio.aspx')
 end
 
 
