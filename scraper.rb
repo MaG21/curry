@@ -413,16 +413,20 @@ class Scraper::Reservas
 			return
 		end
 
-		values = @agent.page.search('//table[@class="tabla-divisas"]/tbody/tr/td').map(&:text)
+		values = @agent.page.search('//table[@class="currency-box-table"]/tbody/tr[@class="even"]/td').map(&:text)
 
-		return if values.empty?
+		return if values.to_a.empty?
 
-		if values.first =~ /d.l?lar/i
+		if values.first =~ /USD/i
 			@dollar[:buying_rate], @dollar[:selling_rate] = values[1,2]
 		end
-		
-		if values[4] =~ /euro/i
-			@euro[:buying_rate], @euro[:selling_rate]     = values[5,2]
+
+		values = @agent.page.search('//table[@class="currency-box-table"]/tbody/tr[@class="odd"][2]/td').map(&:text)
+
+		return if values.to_a.empty?
+
+		if values.first =~ /EUR/i
+			@euro[:buying_rate], @euro[:selling_rate]    = values[1,2]
 		end
 	end
 
