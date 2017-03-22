@@ -12,4 +12,6 @@ group :production do
 end
 
 gem 'mechanize', '~> 2.7'
+gem 'simple-spreadsheet', '~> 0.5.0'
+
 

@@ -3,13 +3,9 @@ require 'open-uri'
 require 'json'
 require 'thwait'
 require 'bigdecimal'
-require 'mkmf'
 require 'mechanize'
-
-# Don't create mkmf.log files
-module MakeMakefile::Logging
-	  @logfile = File::NULL
-end
+require 'fileutils'
+require 'simple-spreadsheet'
 
 module Scraper
 	USER_AGENTS = ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2',
@@ -104,13 +100,7 @@ class Scraper::CentralBank
 		@url    = url
 		@dollar = Hash.new { String.new }
 
-		@has_gocr  = !!find_executable('gocr')
-		@has_djpeg = !!find_executable('djpeg')
-		@has_ocrad = !!find_executable('ocrad')
-
-		if can_parse?
-			parse_data()
-		end
+		parse_data()
 	end
 
 	def serialize
@@ -124,98 +114,57 @@ class Scraper::CentralBank
 		@serialized_info = JSON.pretty_generate(tmp_info)
 	end
 
-	def can_parse?
-		@has_gocr and @has_ocrad and @has_djpeg
-	end
-
 	private
 
-	# parallelism may speed things up a little :)
 	def parse_data
-		pdf_file   = open(DATA_URI)
-		r_fd, w_fd = IO.pipe
+		get_data(DATA_URI) do|file|
+			path = "#{file.path}.xls"
 
-		# spawn new process
-		pid        = fork()
+			FileUtils.mv(file.path, path)
 
-		engine = pid ? :gocr : :ocrad
+			xls  = SimpleSpreadsheet::Workbook.read(path)
 
-		data   = get_data(pdf_file.path, engine)
+			xls.selected_sheet = xls.sheets.first
 
-		values = parse_values(data)
+			row  = xls.last_row
 
-		unless pid
-			w_fd.write(values.join(','))
-			exit 0
-		end
-
-		Process.wait pid
-
-		w_fd.close
-		pdf_file.close
-		pdf_file.unlink
-
-		values_alternative = r_fd.read.split ','
-
-		@dollar[:buying_rate]  = values.fetch(BUYING_RATE_IDX, '')
-		@dollar[:selling_rate] = values.fetch(SELLING_RATE_IDX, '')
-
-		if @dollar[:buying_rate].empty?
-			@dollar[:buying_rate]  = values_alternative.fetch(BUYING_RATE_IDX, '')
-		end
-
-		if @dollar[:selling_rate].empty?
-			@dollar[:selling_rate] = values_alternative.fetch(SELLING_RATE_IDX, '')
+			@dollar[:buying_rate]  = xls.cell(row, 4)
+			@dollar[:selling_rate] = xls.cell(row, 5)
 		end
 	end
 
-	def parse_values(data)
-		values = data.scan(/(?<=D.)..\.../)
+	# yields file
+	def get_data(url, &block)
+		mutex       = Mutex.new
+		file_length = 0
 
-		buying_rate  = ''
-		selling_rate = ''
+		opts = {}
 
-		tmp_buying_rate, tmp_selling_rate = values.collect {|rate| rate.tr('lIOS', '1105').tr ' ', ''}
-
-		if tmp_buying_rate =~ /\d{2}\.\d{2}+/
-			buying_rate = tmp_buying_rate[/\d+\.\d{2}/]
+		# This lambda gets called once. The argument is the
+		# length of the file as per the HTTP header sent by
+		# the server.
+		opts[:content_length_proc] = lambda do|len|
+			file_length = len
+			mutex.lock
 		end
 
-		if tmp_selling_rate =~ /\d{2}\.\d{2}+/
-			selling_rate = tmp_selling_rate[/\d+\.\d{2}/]
+		# This lambda could be called multiple times. Each time,
+		# it passes the actual number of bytes downloaded.
+		opts[:progress_proc] = lambda do|delta|
+			mutex.unlock if delta >= file_length
 		end
 
-		ret = []
-		ret[BUYING_RATE_IDX]  = buying_rate
-		ret[SELLING_RATE_IDX] = selling_rate
+		open(url, opts) do|file|
 
-		ret
-	end
+			# Attempts to grab the lock and waits if it isn't available
+			# We want to wait if the file isn't fully downloaded.
+			mutex.lock
 
-	def get_data(path, engine=:ocrad)
-		r_fd, w_fd = IO.pipe
-
-		pdftojpeg_str = pdftojpeg_command(path)
-
-		if engine == :ocrad and @has_ocrad
-			spawn "#{pdftojpeg_str} | ocrad -F utf8", :out => w_fd
-		elsif engine == :gocr and @has_gocr
-			spawn "#{pdftojpeg_str} | gocr -f UTF8 -v 0 -", :out => w_fd
-		else
-			return ''
+			block.call(file)
 		end
-
-		w_fd.close
-		data = r_fd.read
-		r_fd.close
-		data
 	end
 
-	def pdftojpeg_command(image_path)
-		   "convert -density 300 -trim -quality 100 #{image_path} jpeg:fd:1 | djpeg -scale 1/2 -grayscale -pnm"
-	end
-
-	DATA_URI         = URI('http://www.bancentral.gov.do/tasas_cambio/tasaus_mc.pdf')
+	DATA_URI         = URI('http://www.bancentral.gov.do/tasas_cambio/TASA_DOLAR_REFERENCIA_MC.XLS')
 	BUYING_RATE_IDX  = 0
 	SELLING_RATE_IDX = 1
 end
