@@ -73,19 +73,19 @@ describe Scraper, 'module' do
 		end
 
 		it 'parses the BUYING rate of the Dollar' do
-			expect($reservas.dollar[:buying_rate]).to match(/\d{2}.\d{1,2}/)
+			expect($reservas.dollar[:buying_rate]).to match(/\d{2}(\.\d{1,2})?/)
 		end
 
 		it 'parses the SELLING rate of the Dollar' do
-			expect($reservas.dollar[:selling_rate]).to match(/\d{2}.\d{1,2}/)
+			expect($reservas.dollar[:selling_rate]).to match(/\d{2}(\.\d{1,2})?/)
 		end
 
 		it 'parses the BUYING rate of the Euro' do
-			expect($reservas.euro[:buying_rate]).to match(/\d{2}.\d{1,2}/)
+			expect($reservas.euro[:buying_rate]).to match(/\d{2}(\.\d{1,2})?/)
 		end
 
 		it 'parses the SELLING rate of the Euro' do
-			expect($reservas.euro[:selling_rate]).to match(/\d{2}.\d{1,2}/)
+			expect($reservas.euro[:selling_rate]).to match(/\d{2}(\.\d{1,2})?/)
 		end
 	end
 
@@ -95,19 +95,11 @@ describe Scraper, 'module' do
 		end
 
 		it 'parses the BUYING rate of the Dollar' do
-			unless $central_bank.can_parse?
-				pending 'please make sure gocr/ocrad/djpeg is installed.'
-			end
-
-			expect($central_bank.dollar[:buying_rate]).to match(/\d{2}.\d{1,2}/)
+			expect($central_bank.dollar[:buying_rate].to_s).to match(/\A\d{2}\.\d{1,4}\z/)
 		end
 
 		it 'parses the SELLING rate of the Dollar' do
-			unless $central_bank.can_parse?
-				pending 'please make sure gocr/ocrad/djpeg is installed.'
-			end
-
-			expect($central_bank.dollar[:selling_rate]).to match(/\d{2}.\d{1,2}/)
+			expect($central_bank.dollar[:selling_rate].to_s).to match(/\A\d{2}\.\d{1,4}\z/)
 		end
 
 		it 'serializes the SELLING and BUYING rates of the Dollar.' do
