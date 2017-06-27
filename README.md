@@ -27,21 +27,7 @@ or better implemented.<br>
 $ bundle install
 ```
 
-Please note that ``imagemagick``, ``ocrad`` and/or ``gocr`` should be installed,<br>
-otherwise the dollar rates given by the Central Bank of the Dominican Republic</br>
-would not be available.<br>
-
-Ubuntu:
-
-```shell
-$ sudo apt-get install imagemagick ocrad gocr
-```
-
-OSX:
-
-```shell
-$ brew install imagemagick ocrad gocr
-```
+Please note that, this service not longer needs `imagemagik`, `ogcr` or `ocrad`.
 
 This application uses port 8080 by default, one may change the port passing it as<br>
 the first parameter:
