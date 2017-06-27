@@ -1,14 +1,11 @@
 language: ruby
-sudo: required
 
 rvm:
-  - '2.2.1'
+  - '2.2.2'
   - '2.3.0'
+  - '2.4.0p0'
 
-script: bundle exec rspec --pattern spec/{codebase/*,requests/api/v1/*} 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y imagemagick ocrad gocr
+script: bundle exec rspec --pattern spec/{codebase/*,requests/api/v1/*}
 
 notifications:
   email: false
