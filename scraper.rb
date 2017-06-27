@@ -107,8 +107,10 @@ class Scraper::CentralBank
 		return @serialized_info if @serialized_info
 
 		tmp_info = {
-		     :dollar => {:buying_rate  => @dollar[:buying_rate],
-		                 :selling_rate => @dollar[:selling_rate]}
+			:dollar => {
+				:buying_rate  => @dollar[:buying_rate].to_s,
+				:selling_rate => @dollar[:selling_rate].to_s
+			}
 		}
 
 		@serialized_info = JSON.pretty_generate(tmp_info)
