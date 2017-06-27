@@ -7,11 +7,9 @@ group :test, :development do
 end
 
 group :production do
-	gem 'thin',    '~> 1.6'
-	gem 'sinatra', '~> 1.4'
+	gem 'thin'
+	gem 'sinatra', '~> 2.0'
 end
 
-gem 'mechanize', '~> 2.7'
+gem 'mechanize'
 gem 'simple-spreadsheet', '~> 0.5.0'
-
-
