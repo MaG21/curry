@@ -2,6 +2,7 @@
 
 # Proposal submission (Ver 2.0)
 Currently we're planing on making many more changes, those changes will affect the way we use the service today. But before making any change, we'll love to hear any new feature you've in mind, currently we're planing on implementing the following features:
+
 	- History (make rates from previous days accesible)
 	- Faster responses (increase the service's response time)
 	- Include new juicy API conserning employee's compensations.
