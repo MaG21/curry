@@ -6,6 +6,7 @@ Currently we're planing on making many more changes, those changes will affect t
 	- History (make rates from previous days accesible)
 	- Faster responses (increase the service's response time)
 	- Include new juicy API conserning employee's compensations.
+	- BPD's TXT (Banco Popular Dominicano) (a new repo will be created and included as a dependency)
 
 ## Currency scraper for the Dominican Republic
 
