@@ -26,125 +26,125 @@ $info    = Scraper::Info.new
 $counter = 0
 
 Thread.new do
-	loop do
-		sleep 10_800 # update every three ours
-		info = Scraper::Info.new
+  loop do
+    sleep 10_800 # update every three ours
+    info = Scraper::Info.new
 
-		$mutex.synchronize do
-			$info = info
-		end
-	end
+    $mutex.synchronize do
+      $info = info
+    end
+  end
 end
 
 before do
-	$counter += 1 unless request.path_info =~ /^\/(?:requests)?$/
+  $counter += 1 unless request.path_info =~ /^\/(?:requests)?$/
 end
 
 get '/' do
-	headers({'Content-Type' => 'text/plain'})
+  headers({'Content-Type' => 'text/plain'})
 
-	send_file 'README.md'
+  send_file 'README.md'
 end
 
 get '/rates' do
-	headers({'Content-Type' => 'application/json'})
+  headers({'Content-Type' => 'application/json'})
 
-	$mutex.synchronize do
-		$info.serialize
-	end
+  $mutex.synchronize do
+    $info.serialize
+  end
 end
 
 get '/central_bank_rates' do
-	headers({'Content-Type' => 'application/json'})
+  headers({'Content-Type' => 'application/json'})
 
-	$mutex.synchronize do
-		$info.central_bank.serialize
-	end
+  $mutex.synchronize do
+    $info.central_bank.serialize
+  end
 end
 
 get '/requests' do
-	headers({'Content-Type' => 'text/plain'})
+  headers({'Content-Type' => 'text/plain'})
 
-	"#{$counter} requests."
+  "#{$counter} requests."
 end
 
 
 get '/ncf/:rnc/:ncf' do|rnc, ncf|
-	agent = Mechanize.new
-	page = agent.get 'http://www.dgii.gov.do/app/WebApps/Consultas/NCF/ConsultaNCF.aspx'
-	form = page.form id: 'form1'
+  agent = Mechanize.new
+  page = agent.get 'http://www.dgii.gov.do/app/WebApps/Consultas/NCF/ConsultaNCF.aspx'
+  form = page.form id: 'form1'
 
-	rnc.gsub!(/\D/, '')
-	len = rnc.length
+  rnc.gsub!(/\D/, '')
+  len = rnc.length
 
-	return {valid: false}.to_json unless len == 9 or len == 11
+  return {valid: false}.to_json unless len == 9 or len == 11
 
-	form.txtRNC = rnc
-	form.txtNCF = ncf
-	form.add_field! 'btnConsultar'
-	form.add_field! '__EVENTTARGET'
-	form.add_field! '__EVENTARGUMENT'
-	form.add_field! '__LASTFOCUS'
-	form.btnConsultar = 'Consultar'
+  form.txtRNC = rnc
+  form.txtNCF = ncf
+  form.add_field! 'btnConsultar'
+  form.add_field! '__EVENTTARGET'
+  form.add_field! '__EVENTARGUMENT'
+  form.add_field! '__LASTFOCUS'
+  form.btnConsultar = 'Consultar'
 
-	ret = form.submit
+  ret = form.submit
 
-	ret.content =~ /Comprobante Fiscal digitado es v.{1,2}lido./
-	{valid: !!$&}.to_json
+  ret.content =~ /Comprobante Fiscal digitado es v.{1,2}lido./
+  {valid: !!$&}.to_json
 end
 
 
 get '/rnc/:keyword' do|keyword|
-	content_type 'application/json'
+  content_type 'application/json'
 
-	agent = Mechanize.new
-	page  = agent.get 'http://www.dgii.gov.do/app/WebApps/Consultas/rnc/RncWeb.aspx'
+  agent = Mechanize.new
+  page  = agent.get 'http://www.dgii.gov.do/app/WebApps/Consultas/rnc/RncWeb.aspx'
 
-	form = page.form name: 'Form1'
+  form = page.form name: 'Form1'
 
-	form.add_field! '__EVENTTARGET'
-	form.add_field! '__EVENTARGUMENT'
-	form.add_field! '__LASTFOCUS'
-	form.add_field! 'btnBuscaRncCed'
+  form.add_field! '__EVENTTARGET'
+  form.add_field! '__EVENTARGUMENT'
+  form.add_field! '__LASTFOCUS'
+  form.add_field! 'btnBuscaRncCed'
 
-	keyword.gsub!(/\D/, '')
-	len = keyword.length
+  keyword.gsub!(/\D/, '')
+  len = keyword.length
 
-	return {}.to_json unless len == 9 or len == 11
+  return {}.to_json unless len == 9 or len == 11
 
-	form.txtRncCed      = keyword
-	form.btnBuscaRncCed = 'Buscar'
+  form.txtRncCed      = keyword
+  form.btnBuscaRncCed = 'Buscar'
 
-	ret = form.submit
+  ret = form.submit
 
-	return {}.to_json unless ret
+  return {}.to_json unless ret
 
-	tmp = ret.search '//tr[@class="GridItemStyle"]'
+  tmp = ret.search '//tr[@class="GridItemStyle"]'
 
-	return {}.to_json unless tmp
+  return {}.to_json unless tmp
 
-	fields = tmp.children
+  fields = tmp.children
 
-	return {}.to_json if fields.empty?
+  return {}.to_json if fields.empty?
 
-	payload = {
-		:rnc             => fields[1].text.strip,
-		:name            => fields[2].text.strip,
-		:comercial_name  => fields[3].text.strip,
-		:category        => fields[4].text.strip,
-		:payment_regimen => fields[5].text.strip,
-		:status          => fields[6].text.strip
-	}
+  payload = {
+    :rnc             => fields[1].text.strip,
+    :name            => fields[2].text.strip,
+    :comercial_name  => fields[3].text.strip,
+    :category        => fields[4].text.strip,
+    :payment_regimen => fields[5].text.strip,
+    :status          => fields[6].text.strip
+  }
 
-	JSON.pretty_generate(payload)
+  JSON.pretty_generate(payload)
 end
 
 not_found do
-	redirect '/'
+  redirect '/'
 end
 
 get '/__sinatra__/*' do
-	headers({'Content-Type' => 'text/plain'})
-	'Nope, this a Rails application, or maybe not, dunno.'
+  headers({'Content-Type' => 'text/plain'})
+  'Nope, this a Rails application, or maybe not, dunno.'
 end
 
