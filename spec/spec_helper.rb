@@ -1,4 +1,4 @@
-require_relative '../curry.rb'
+require 'curry'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

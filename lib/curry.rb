@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 # By: MaG
 #
+require "sinatra"
+require 'json'
+require 'mechanize'
 
 # Get port before sinatra
 port = ARGV.first =~ /\A\d+\z/ ? ARGV.first.to_i : 8080
@@ -12,14 +15,11 @@ Bundler.require(:curry)        # This line is important, in case curry is embedd
                                # with it's own Gemfile (like Rails)
 
 require 'thread'
-require_relative 'scraper'
+require 'curry/scraper'
 
 set :port, port
 set :bind, '0.0.0.0'
 set :environment, :production
-
-# semver
-VERSION = '1.6'
 
 $mutex   = Mutex.new
 $info    = Scraper::Info.new
@@ -147,4 +147,3 @@ get '/__sinatra__/*' do
   headers({'Content-Type' => 'text/plain'})
   'Nope, this a Rails application, or maybe not, dunno.'
 end
-
