@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 # By: MaG
 #
-require 'bundler/setup'
-Bundler.require(:default)
-Bundler.require(:development)
+require_relative 'lib/curry'
 
 info = Scraper::Info.new()
 puts "Popular Bank rates:"
@@ -17,6 +15,10 @@ p info.progress.euro
 puts "\nLopez de Haro Bank rates:"
 p info.blh.dollar
 p info.blh.euro
+
+puts "\nBHD Leon Bank rates:"
+p info.bhdleon.dollar
+p info.bhdleon.euro
 
 puts "\nBanReservas Bank rates:"
 p info.reservas.dollar
