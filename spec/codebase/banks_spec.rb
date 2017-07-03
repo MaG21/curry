@@ -45,6 +45,29 @@ describe Scraper, 'module' do
     end
   end
 
+  context 'BHD León' do
+    it 'makes an instance of the object' do
+      expect { $bhdleon = Scraper::BHDLeon.new }.not_to raise_error
+    end
+
+    it 'parses the BUYING rate of the Dollar' do
+      expect($bhdleon.dollar[:buying_rate]).to match(/\d{2}.\d{1,2}/)
+    end
+
+    it 'parses the SELLING rate of the Dollar' do
+      expect($bhdleon.dollar[:selling_rate]).to match(/\d{2}.\d{1,2}/)
+    end
+
+    it 'parses the BUYING rate of the Euro' do
+      expect($bhdleon.euro[:buying_rate]).to match(/\d{2}.\d{1,2}/)
+    end
+
+    it 'parses the SELLING rate of the Euro' do
+      expect($bhdleon.euro[:selling_rate]).to match(/\d{2}.\d{1,2}/)
+    end
+  end
+
+
   context 'Progress' do
     it 'makes an instance of the object' do
       expect { $progress = Scraper::Progress.new }.not_to raise_error
