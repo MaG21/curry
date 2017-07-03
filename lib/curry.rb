@@ -11,8 +11,6 @@ port = ARGV.first =~ /\A\d+\z/ ? ARGV.first.to_i : 8080
 require 'bundler/setup'
 Bundler.require(:default)
 Bundler.require(:production)
-Bundler.require(:curry)        # This line is important, in case curry is embedded in other project
-                               # with it's own Gemfile (like Rails)
 
 require 'thread'
 require 'curry/scraper'
