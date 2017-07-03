@@ -2,6 +2,7 @@ require "thwait"
 require "bigdecimal"
 
 require "curry/scraper/blh"
+require "curry/scraper/bhdleon"
 require "curry/scraper/bpd"
 require "curry/scraper/central_bank"
 require "curry/scraper/progress"
@@ -14,6 +15,7 @@ module Scraper
 
     attr_reader :bpd,
       :blh,
+      :bhdleon,
       :progress,
       :reservas,
       :central_bank
@@ -23,13 +25,14 @@ module Scraper
 
       threads << Thread.new { @bpd          = Scraper::BPD.new() }
       threads << Thread.new { @blh          = Scraper::BLH.new() }
+      threads << Thread.new { @bhdleon      = Scraper::BHDLeon.new() }
       threads << Thread.new { @progress     = Scraper::Progress.new() }
       threads << Thread.new { @reservas     = Scraper::Reservas.new() }
       threads << Thread.new { @central_bank = Scraper::CentralBank.new }
 
       ThreadsWait.all_waits(*threads)
 
-      @entities = [@bpd, @blh, @progress, @reservas]
+      @entities = [@bpd, @blh, @bhdleon, @progress, @reservas]
 
       @euro_mean   = { :buying_rate  => compute_mean(:euro, :buying_rate),
                        :selling_rate => compute_mean(:euro, :selling_rate)}
@@ -52,6 +55,11 @@ module Scraper
           :euro   => @blh.euro,
           :dollar => @blh.dollar,
           :source => @blh.url
+        },
+        :bhdleon => {
+          :euro   => @bhdleon.euro,
+          :dollar => @bhdleon.dollar,
+          :source => @bhdleon.url
         },
         :progress  => {
           :euro   => @progress.euro,
