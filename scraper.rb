@@ -8,10 +8,10 @@ require 'fileutils'
 require 'simple-spreadsheet'
 
 module Scraper
-	USER_AGENTS = ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2',
-	               'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.2 Safari/537.36',
-		       'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:21.0) Gecko/20130331 Firefox/21.0',
-		       'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko']
+	USER_AGENTS = ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+	               'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393',
+		       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+		       'Mozilla/5.0 (iPad; CPU OS 10_3_2 like Mac OS X) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.0 Mobile/14F89 Safari/602.1']
 end
 
 class Scraper::Info
@@ -29,13 +29,14 @@ class Scraper::Info
 
 		threads << Thread.new { @bpd          = Scraper::BPD.new() }
 		threads << Thread.new { @blh          = Scraper::BLH.new() }
+		threads << Thread.new { @bhdleon      = Scraper::BHDLeon.new() }
 		threads << Thread.new { @progress     = Scraper::Progress.new() }
 		threads << Thread.new { @reservas     = Scraper::Reservas.new() }
 		threads << Thread.new { @central_bank = Scraper::CentralBank.new }
 
 		ThreadsWait.all_waits(*threads)
 
-		@entities = [@bpd, @blh, @progress, @reservas]
+		@entities = [@bpd, @blh, @bhdleon, @progress, @reservas]
 
 		@euro_mean   = { :buying_rate  => compute_mean(:euro, :buying_rate),
 		                 :selling_rate => compute_mean(:euro, :selling_rate)}
@@ -56,6 +57,10 @@ class Scraper::Info
 		    :blh         => {:euro   => @blh.euro,
 				     :dollar => @blh.dollar,
 		                     :source => @blh.url},
+
+		    :bhdleon     => {:euro   => @bhdleon.euro,
+				     :dollar => @bhdleon.dollar,
+		                     :source => @bhdleon.url},
 
 		    :progress    => {:euro   => @progress.euro,
 				     :dollar => @progress.dollar,
@@ -331,6 +336,62 @@ class Scraper::BLH
 	DATA_URI = URI('https://www.blh.com.do/Inicio.aspx')
 end
 
+class Scraper::BHDLeon
+	attr_reader :url,
+		:euro,
+		:dollar
+
+	def initialize(url=DATA_URI)
+		@url    = url
+		@euro   = {}
+		@dollar = {}
+
+		@agent = Mechanize.new
+
+		@agent.user_agent             = Scraper::USER_AGENTS.sample
+		@agent.ssl_version            = :TLSv1
+		@agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+		parse_page()
+	end
+
+	def refresh
+		parse_page()
+		true
+	end
+
+	private
+
+	def parse_page
+		begin
+			@agent.get @url
+		rescue SocketError
+			$stderr.puts $!
+			return
+		end
+
+		body = @agent.page.body.sub('<![CDATA[', '')
+		xml  = Nokogiri.XML(body)
+
+		if node = xml.css('tr:nth-child(2)/td:nth-child(2)').first
+			@dollar[:buying_rate] = node.text[/[\d.]+/]
+		end
+
+		if node = xml.css('tr:nth-child(2)/td:nth-child(3)').first
+			@dollar[:selling_rate] = node.text[/[\d.]+/]
+		end
+
+		if node = xml.css('tr:nth-child(3)/td:nth-child(2)').first
+			@euro[:buying_rate] = node.text[/[\d.]+/]
+		end
+
+		if node = xml.css('tr:nth-child(3)/td:nth-child(3)').first
+			@euro[:selling_rate] = node.text[/[\d.]+/]
+		end
+	end
+
+	DATA_URI = URI('https://www.bhdleon.com.do/wps/contenthandler/!ut/p/wcmrest/LibraryRichTextComponent/de81dd85-a711-4ef6-ba80-1992e9db7fd0')
+end
 
 class Scraper::Reservas
 	attr_reader :url,
