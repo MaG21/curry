@@ -1,6 +1,15 @@
 [![Build Status](https://travis-ci.org/MarcosCommunity/curry.svg?branch=master)](https://travis-ci.org/MarcosCommunity/curry)
 
-# Currency scraper for the Dominican Republic
+# Feature request for Ver 2.0 (branch v2.0)
+Currently we're planing on making many more changes, those changes will affect the way we use the service. But before making any change, we'll love to hear any new feature you've in mind, currently we're planing on implementing the following features:
+
+- History (make rates from previous days accesible)
+- Faster responses (increase the service's response time)
+- Include new juicy API conserning employee's compensations.
+- BPD's TXT (Banco Popular Dominicano) (a new repo will be created and included as a dependency)
+- ~~Support for BHD Leon rates~~
+
+## Currency scraper for the Dominican Republic
 
 This is a simple service that provides the current currency exchange rate for<br>
 the Dominican Republic. To do so, we parse the web pages of all the major banks<br>
@@ -21,27 +30,13 @@ or<br>
 you may make a pull request as well, if you see something that needs to be fixed<br>
 or better implemented.<br>
 
-# Install
+## Install
 
 ```shell
 $ bundle install
 ```
 
-Please note that ``imagemagick``, ``ocrad`` and/or ``gocr`` should be installed,<br>
-otherwise the dollar rates given by the Central Bank of the Dominican Republic</br>
-would not be available.<br>
-
-Ubuntu:
-
-```shell
-$ sudo apt-get install imagemagick ocrad gocr
-```
-
-OSX:
-
-```shell
-$ brew install imagemagick ocrad gocr
-```
+Please note that, this service not longer needs `imagemagik`, `ogcr` or `ocrad`.
 
 This application uses port 8080 by default, one may change the port passing it as<br>
 the first parameter:
@@ -50,7 +45,7 @@ the first parameter:
 $ ruby curry.rb 1025
 ```
 
-# Known bugs
+## Known bugs
 
 There's a bug in older versions of Ruby that causes this application to hang for<br>
 an indefinite period of time. Please use Ruby 2.2 +

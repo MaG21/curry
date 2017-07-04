@@ -5,7 +5,7 @@ require 'fileutils'
 
 require 'byebug'
 
-DATA_URI = URI('http://www.bancentral.gov.do/tasas_cambio/TASA_DOLAR_REFERENCIA_MC.XLS')
+DATA_URI = URI('https://www.bancentral.gov.do/tasas_cambio/TASA_DOLAR_REFERENCIA_MC.XLS')
 
 # yields file
 def get_data(url, &block)
