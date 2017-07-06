@@ -1,6 +1,7 @@
 # Central Bank of the Dominican Republic
 
 require 'uri'
+require 'json'
 require 'open-uri'
 require 'simple-spreadsheet'
 
