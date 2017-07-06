@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'mechanize'
   spec.add_dependency 'simple-spreadsheet', '~> 0.5.0'
-  spec.add_dependency 'sinatra', '~> 2.0'
 
   spec.add_development_dependency 'rspec', '~> 3.4'
   spec.add_development_dependency 'rack-test', '~> 0.6.3'
