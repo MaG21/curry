@@ -1,0 +1,10 @@
+This project uses semver, for more information visit http://semver.org
+
+2.2.0 (House keeping) / 2017-07-05
+==================
+	* Clases are visible through the Curry module. (MaG)
+	* Remove curry.rb:   This script is not longer needed because this
+	project not longer function as a program but rather as a Gem. (MaG)
+	* Remove class Info: This class was entirely used by curry.rb, since
+	that file is not longer need, there's not point in maintaining that
+	file. (MaG)

@@ -1,4 +1,5 @@
-# Dominican Popular Bank
+require_relative 'scraper'
+
 class Scraper::BPD
   attr_reader :url,
     :euro,
@@ -6,14 +7,9 @@ class Scraper::BPD
 
   def initialize(url=DATA_URI)
     @url    = url
-    @euro  = {}
+    @euro   = {}
     @dollar = {}
-
-    @agent = Mechanize.new
-
-    @agent.user_agent             = Scraper::USER_AGENTS.sample
-    @agent.ssl_version            = :TLSv1
-    @agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    @agent  = Scraper.initialize_agent()
 
     parse_page()
   end
