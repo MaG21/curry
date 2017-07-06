@@ -5,7 +5,7 @@ rvm:
   - '2.3.0'
   - '2.4.0'
 
-script: bundle exec rspec --pattern spec/{codebase/*,requests/api/v1/*}
+script: bundle exec rspec spec/codebase
 
 notifications:
   email: false
