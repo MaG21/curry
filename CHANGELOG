@@ -6,5 +6,5 @@ This project uses semver, for more information visit http://semver.org
 	* Remove curry.rb:   This script is not longer needed because this
 	project not longer function as a program but rather as a Gem. (MaG)
 	* Remove class Info: This class was entirely used by curry.rb, since
-	that file is not longer need, there's not point in maintaining that
+	that file is not longer needed, there's not point in maintaining that
 	file. (MaG)
