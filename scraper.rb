@@ -261,24 +261,24 @@ class Scraper::Progress
 			return
 		end
 
-		if node = @agent.page.search('//div[@id="compra_rd"]').first
-			@dollar[:buying_rate] = node.text[/[\d.]+/] 
-		end
+		values = @agent.page.search(XPATH_STRING).map(&:text)
 
-		if node = @agent.page.search('//div[@id="venta_rd"]').first
-			@dollar[:selling_rate]= node.text[/[\d.]+/]
-		end
-
-		if node = @agent.page.search('//div[@id="compra_rd_euro"]').first
-			@euro[:buying_rate] = node.text[/[\d.]+/]
-		end
-
-		if node = @agent.page.search('//div[@id="venta_rd_euro"]').first
-			@euro[:selling_rate]= node.text[/[\d.]+/]
+		values.each do|element|
+			case element
+			when /COMPRA\s+US/i
+				@dollar[:buying_rate] = element[/[\d.]+/]
+			when /VENTA\s+US/i
+				@dollar[:selling_rate]= element[/[\d.]+/]
+			when /COMPRA\s+EUR/i
+				@euro[:buying_rate] = element[/[\d.]+/]
+			when /VENTA\s+EUR/i
+				@euro[:selling_rate]= element[/[\d.]+/]
+			end
 		end
 	end
 
-	DATA_URI     = URI('http://www.progreso.com.do/index.php')
+	XPATH_STRING = '//div[@class="diario"]//div[contains(@class, "col-xs-3 animated fadeIn")]'
+	DATA_URI     = URI('https://www.progreso.com.do/index.php')
 end
 
 # Lopez de Haro Bank
