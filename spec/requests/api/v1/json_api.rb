@@ -72,16 +72,16 @@ describe 'Curry server', type: :request  do
 
 				expect(json[bank]['source']).not_to eq("")
 
-				expect(json[bank]['euro']['buying_rate']).to    match(/\A\d+(\.\d{2})?\z/)
-				expect(json[bank]['euro']['selling_rate']).to   match(/\A\d+(\.\d{2})?\z/)
-				expect(json[bank]['dollar']['buying_rate']).to  match(/\A\d+(\.\d{2})?\z/)
-				expect(json[bank]['dollar']['selling_rate']).to match(/\A\d+(\.\d{2})?\z/)
+				expect(json[bank]['euro']['buying_rate']).to    match(/\A\d+(\.\d{1,2})?\z/)
+				expect(json[bank]['euro']['selling_rate']).to   match(/\A\d+(\.\d{1,2})?\z/)
+				expect(json[bank]['dollar']['buying_rate']).to  match(/\A\d+(\.\d{1,2})?\z/)
+				expect(json[bank]['dollar']['selling_rate']).to match(/\A\d+(\.\d{1,2})?\z/)
 			end
 
-			expect(json['euro_mean']['buying_rate']).to    match(/\A\d{2}(\.\d{2})?\z/)
-			expect(json['euro_mean']['selling_rate']).to   match(/\A\d{2}(\.\d{2})?\z/)
-			expect(json['dollar_mean']['buying_rate']).to  match(/\A\d{2}(\.\d{2})?\z/)
-			expect(json['dollar_mean']['selling_rate']).to match(/\A\d{2}(\.\d{2})?\z/)
+			expect(json['euro_mean']['buying_rate']).to    match(/\A\d{2}(\.\d{1,2})?\z/)
+			expect(json['euro_mean']['selling_rate']).to   match(/\A\d{2}(\.\d{1,2})?\z/)
+			expect(json['dollar_mean']['buying_rate']).to  match(/\A\d{2}(\.\d{1,2})?\z/)
+			expect(json['dollar_mean']['selling_rate']).to match(/\A\d{2}(\.\d{1,2})?\z/)
 		end
 
 		it 'returns the rate of the dollar according to the Central Bank of the Dominican Republic' do
