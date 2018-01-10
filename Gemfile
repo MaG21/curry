@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+group :test do
+	gem 'codecov', :require => false
+end
+
 group :test, :development do
 	gem 'rspec',  '~> 3.4'
 	gem 'rack-test', '~> 0.6.3'
