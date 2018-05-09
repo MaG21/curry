@@ -22,8 +22,6 @@ _Harmonic mean_.
 This application is freely available as a service thanks to<br>
 _Marcos Organizador de Negocios S.R.L_ here http://api.marcos.do<br>
 
-Something is wrong with this service?<br>
-Please contact us (at) manuel at marcos dot do.<br>
 
 or<br>
 
