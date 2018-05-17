@@ -266,13 +266,13 @@ class Scraper::Progress
 		values.each do|element|
 			case element
 			when /COMPRA\s+US/i
-				@dollar[:buying_rate] = element[/[\d.]+/]
+				@dollar[:buying_rate] = element[/[\d.]+/].to_s
 			when /VENTA\s+US/i
-				@dollar[:selling_rate]= element[/[\d.]+/]
+				@dollar[:selling_rate]= element[/[\d.]+/].to_s
 			when /COMPRA\s+EUR/i
-				@euro[:buying_rate] = element[/[\d.]+/]
+				@euro[:buying_rate] = element[/[\d.]+/].to_s
 			when /VENTA\s+EUR/i
-				@euro[:selling_rate]= element[/[\d.]+/]
+				@euro[:selling_rate]= element[/[\d.]+/].to_s
 			end
 		end
 	end
@@ -317,19 +317,19 @@ class Scraper::BLH
 		end
 
 		if node = @agent.page.search('//div[@id="usdbuy"]').first
-			@dollar[:buying_rate] = node.text[/[\d.]+/]
+			@dollar[:buying_rate] = node.text[/[\d.]+/].to_s
 		end
 
 		if node = @agent.page.search('//div[@id="usdsell"]').first
-			@dollar[:selling_rate] = node.text[/[\d.]+/]
+			@dollar[:selling_rate] = node.text[/[\d.]+/].to_s
 		end
 
 		if node = @agent.page.search('//div[@id="eurbuy"]').first
-			@euro[:buying_rate] = node.text[/[\d.]+/]
+			@euro[:buying_rate] = node.text[/[\d.]+/].to_s
 		end
 
 		if node = @agent.page.search('//div[@id="eursell"]').first
-			@euro[:selling_rate] = node.text[/[\d.]+/]
+			@euro[:selling_rate] = node.text[/[\d.]+/].to_s
 		end
 	end
 
@@ -349,7 +349,7 @@ class Scraper::BHDLeon
 		@agent = Mechanize.new
 
 		@agent.user_agent             = Scraper::USER_AGENTS.sample
-		@agent.ssl_version            = :TLSv1
+		@agent.ssl_version            = :TLSv1_2
 		@agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 		parse_page()
@@ -374,19 +374,19 @@ class Scraper::BHDLeon
 		xml  = Nokogiri.XML(body)
 
 		if node = xml.css('tr:nth-child(2)/td:nth-child(2)').first
-			@dollar[:buying_rate] = node.text[/[\d.]+/]
+			@dollar[:buying_rate] = node.text[/[\d.]+/].to_s
 		end
 
 		if node = xml.css('tr:nth-child(2)/td:nth-child(3)').first
-			@dollar[:selling_rate] = node.text[/[\d.]+/]
+			@dollar[:selling_rate] = node.text[/[\d.]+/].to_s
 		end
 
 		if node = xml.css('tr:nth-child(3)/td:nth-child(2)').first
-			@euro[:buying_rate] = node.text[/[\d.]+/]
+			@euro[:buying_rate] = node.text[/[\d.]+/].to_s
 		end
 
 		if node = xml.css('tr:nth-child(3)/td:nth-child(3)').first
-			@euro[:selling_rate] = node.text[/[\d.]+/]
+			@euro[:selling_rate] = node.text[/[\d.]+/].to_s
 		end
 	end
 
@@ -406,6 +406,8 @@ class Scraper::Reservas
 		@agent = Mechanize.new
 
 		@agent.user_agent = Scraper::USER_AGENTS.sample
+		@agent.ssl_version            = :TLSv1_2
+		@agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 		parse_page()
 	end
@@ -442,6 +444,5 @@ class Scraper::Reservas
 		end
 	end
 
-	DATA_URI = URI('http://www.banreservas.com/Pages/index.aspx')
+	DATA_URI = URI('https://www.banreservas.com/')
 end
-
