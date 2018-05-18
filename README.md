@@ -142,5 +142,5 @@ sample response:
 ## License
 MIT License<br>
 
-Copyright(C) 2016 Marcos Organizador de Negocios
+Copyright(C) 2018 Manuel A. Güílamo
 
