@@ -171,7 +171,7 @@ class Scraper::CentralBank
 		end
 	end
 
-	DATA_URI         = URI('https://www.bancentral.gov.do/tasas_cambio/TASA_DOLAR_REFERENCIA_MC.XLS')
+	DATA_URI         = URI('https://gdc.bancentral.gov.do/Common/public/estadisticas/mercado-cambiario/documents/TASA_DOLAR_REFERENCIA_MC.XLS')
 	BUYING_RATE_IDX  = 0
 	SELLING_RATE_IDX = 1
 end
