@@ -171,7 +171,7 @@ class Scraper::CentralBank
 		end
 	end
 
-	DATA_URI         = URI('https://gdc.bancentral.gov.do/Common/public/estadisticas/mercado-cambiario/documents/TASA_DOLAR_REFERENCIA_MC.XLS')
+	DATA_URI         = URI('https://bcrdgdcprod.blob.core.windows.net/documents/estadisticas/mercado-cambiario/documents/TASA_DOLAR_REFERENCIA_MC.xls')
 	BUYING_RATE_IDX  = 0
 	SELLING_RATE_IDX = 1
 end
@@ -190,7 +190,7 @@ class Scraper::BPD
 		@agent = Mechanize.new
 
 		@agent.user_agent             = Scraper::USER_AGENTS.sample
-		@agent.ssl_version            = :TLSv1
+		@agent.ssl_version            = :TLSv1_2
 		@agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 		parse_page()
@@ -295,7 +295,7 @@ class Scraper::BLH
 		@agent = Mechanize.new
 
 		@agent.user_agent             = Scraper::USER_AGENTS.sample
-		@agent.ssl_version            = :TLSv1
+		@agent.ssl_version            = :TLSv1_2
 		@agent.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 		parse_page()
@@ -333,7 +333,7 @@ class Scraper::BLH
 		end
 	end
 
-	DATA_URI = URI('https://www.blh.com.do/Inicio.aspx')
+	DATA_URI = URI('https://www.blh.com.do/')
 end
 
 class Scraper::BHDLeon
