@@ -80,8 +80,8 @@ class Scraper::Info
 	private
 
 	def compute_mean(currency, rate_type)
-		n   = BigDecimal.new(0)
-		sum = BigDecimal.new(0)
+		n   = BigDecimal(0)
+		sum = BigDecimal(0)
 
 		@entities.each do|entity|
 			next unless entity
@@ -91,7 +91,7 @@ class Scraper::Info
 			next unless rate
 
 			n   += 1
-			sum += BigDecimal.new(1) / BigDecimal.new(rate)
+			sum += BigDecimal(1) / BigDecimal(rate)
 		end
 
 		("%.04f" % (n/sum))[/\d+\.\d{2}/].to_s
@@ -316,21 +316,10 @@ class Scraper::BLH
 			return
 		end
 
-		if node = @agent.page.search('//div[@id="usdbuy"]').first
-			@dollar[:buying_rate] = node.text[/[\d.]+/].to_s
-		end
+		node  = @agent.page.search("//div[@class='iwithtext']/div[@class='iwt-text']/p")
 
-		if node = @agent.page.search('//div[@id="usdsell"]').first
-			@dollar[:selling_rate] = node.text[/[\d.]+/].to_s
-		end
-
-		if node = @agent.page.search('//div[@id="eurbuy"]').first
-			@euro[:buying_rate] = node.text[/[\d.]+/].to_s
-		end
-
-		if node = @agent.page.search('//div[@id="eursell"]').first
-			@euro[:selling_rate] = node.text[/[\d.]+/].to_s
-		end
+		@dollar[:buying_rate], @dollar[:selling_rate] = node.text[/DÓLAR.*[\d.]+/].to_s.scan(/[\d.]+/)
+		@euro[:buying_rate], @euro[:selling_rate]     = node.text[/EUROS.*[\d.]+/].to_s.scan(/[\d.]+/)
 	end
 
 	DATA_URI = URI('https://www.blh.com.do/')

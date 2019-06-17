@@ -71,7 +71,9 @@ end
 
 get '/ncf/:rnc/:ncf' do|rnc, ncf|
 	agent = Mechanize.new
+        agent.user_agent  = Scraper::USER_AGENTS.sample
 	page = agent.get 'http://www.dgii.gov.do/app/WebApps/Consultas/NCF/ConsultaNCF.aspx'
+
 	form = page.form id: 'form1'
 
 	rnc.gsub!(/\D/, '')
@@ -93,11 +95,11 @@ get '/ncf/:rnc/:ncf' do|rnc, ncf|
 	{valid: !!$&}.to_json
 end
 
-
 get '/rnc/:keyword' do|keyword|
 	content_type 'application/json'
 
 	agent = Mechanize.new
+        agent.user_agent  = Scraper::USER_AGENTS.sample
 	page  = agent.get 'http://www.dgii.gov.do/app/WebApps/Consultas/rnc/RncWeb.aspx'
 
 	form = page.form name: 'Form1'
