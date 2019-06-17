@@ -80,8 +80,8 @@ class Scraper::Info
 	private
 
 	def compute_mean(currency, rate_type)
-		n   = BigDecimal.new(0)
-		sum = BigDecimal.new(0)
+		n   = BigDecimal(0)
+		sum = BigDecimal(0)
 
 		@entities.each do|entity|
 			next unless entity
@@ -91,7 +91,7 @@ class Scraper::Info
 			next unless rate
 
 			n   += 1
-			sum += BigDecimal.new(1) / BigDecimal.new(rate)
+			sum += BigDecimal(1) / BigDecimal(rate)
 		end
 
 		("%.04f" % (n/sum))[/\d+\.\d{2}/].to_s
