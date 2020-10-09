@@ -67,28 +67,6 @@ describe Scraper, 'module' do
 		end
 	end
 
-	context 'Progress' do
-		it 'makes an instance of the object' do
-			expect { $progress = Scraper::Progress.new }.not_to raise_error
-		end
-
-		it 'parses the BUYING rate of the Dollar' do
-			expect($progress.dollar[:buying_rate]).to match(/\d{2}.\d{1,2}/)
-		end
-
-		it 'parses the SELLING rate of the Dollar' do
-			expect($progress.dollar[:selling_rate]).to match(/\d{2}.\d{1,2}/)
-		end
-
-		it 'parses the BUYING rate of the Euro' do
-			expect($progress.euro[:buying_rate]).to match(/\d{2}.\d{1,2}/)
-		end
-
-		it 'parses the SELLING rate of the Euro' do
-			expect($progress.euro[:selling_rate]).to match(/\d{2}.\d{1,2}/)
-		end
-	end
-
 	context 'Reservas' do
 		it 'makes an instance of the object' do
 			expect { $reservas = Scraper::Reservas.new }.not_to raise_error
