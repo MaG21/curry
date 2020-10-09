@@ -20,7 +20,6 @@ class Scraper::Info
 
 	attr_reader :bpd,
 		    :blh,
-		    :progress,
 		    :reservas,
 		    :central_bank
 
@@ -30,13 +29,12 @@ class Scraper::Info
 		threads << Thread.new { @bpd          = Scraper::BPD.new() }
 		threads << Thread.new { @blh          = Scraper::BLH.new() }
 		threads << Thread.new { @bhdleon      = Scraper::BHDLeon.new() }
-		threads << Thread.new { @progress     = Scraper::Progress.new() }
 		threads << Thread.new { @reservas     = Scraper::Reservas.new() }
 		threads << Thread.new { @central_bank = Scraper::CentralBank.new }
 
 		ThreadsWait.all_waits(*threads)
 
-		@entities = [@bpd, @blh, @bhdleon, @progress, @reservas]
+		@entities = [@bpd, @blh, @bhdleon, @reservas]
 
 		@euro_mean   = { :buying_rate  => compute_mean(:euro, :buying_rate),
 		                 :selling_rate => compute_mean(:euro, :selling_rate)}
@@ -61,10 +59,6 @@ class Scraper::Info
 		    :bhdleon     => {:euro   => @bhdleon.euro,
 				     :dollar => @bhdleon.dollar,
 		                     :source => @bhdleon.url},
-
-		    :progress    => {:euro   => @progress.euro,
-				     :dollar => @progress.dollar,
-				     :source => @progress.url},
 
 		    :banreservas => {:euro   => @reservas.euro,
 				     :dollar => @reservas.dollar,
@@ -227,58 +221,6 @@ class Scraper::BPD
 
 	XPATH_EURO_BUYING_RATE    = '//d:EuroBuyRate'
 	XPATH_EURO_SELLING_RATE   = '//d:EuroSellRate'
-end
-
-class Scraper::Progress
-	attr_reader :url,
-		    :euro,
-		    :dollar
-
-	def initialize(url=DATA_URI)
-		@url    = url
-		@euro   = {}
-		@dollar = {}
-
-		@agent = Mechanize.new
-
-		@agent.user_agent = Scraper::USER_AGENTS.sample
-
-		parse_page()
-	end
-
-	def refresh
-		parse_page()
-		true
-	end
-
-	private
-
-	def parse_page
-		begin
-			@agent.get @url
-		rescue SocketError
-			$stderr.puts $!
-			return
-		end
-
-		values = @agent.page.search(XPATH_STRING).map(&:text)
-
-		values.each do|element|
-			case element
-			when /COMPRA\s+US/i
-				@dollar[:buying_rate] = element[/[\d.]+/].to_s
-			when /VENTA\s+US/i
-				@dollar[:selling_rate]= element[/[\d.]+/].to_s
-			when /COMPRA\s+EUR/i
-				@euro[:buying_rate] = element[/[\d.]+/].to_s
-			when /VENTA\s+EUR/i
-				@euro[:selling_rate]= element[/[\d.]+/].to_s
-			end
-		end
-	end
-
-	XPATH_STRING = '//div[@class="diario"]//div[contains(@class, "col-xs-3 animated fadeIn")]'
-	DATA_URI     = URI('https://www.progreso.com.do/index.php')
 end
 
 # Lopez de Haro Bank
