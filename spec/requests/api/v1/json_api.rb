@@ -67,7 +67,7 @@ describe 'Curry server', type: :request  do
 
 			expect(json).not_to eq({})
 
-			%w(bpd blh bhdleon progress banreservas).each do|bank|
+			%w(bpd blh bhdleon banreservas).each do|bank|
 				expect(json[bank]).not_to eq(nil)
 
 				expect(json[bank]['source']).not_to eq("")
