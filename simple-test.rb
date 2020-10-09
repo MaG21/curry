@@ -12,10 +12,6 @@ puts "Popular Bank rates:"
 p info.bpd.dollar
 p info.bpd.euro
 
-puts "\nProgress Bank Rates:"
-p info.progress.dollar
-p info.progress.euro
-
 puts "\nLopez de Haro Bank rates:"
 p info.blh.dollar
 p info.blh.euro
